@@ -1,0 +1,4 @@
+Perceptron
+===============
+
+PerceptronをScalaで実装
