@@ -6,18 +6,31 @@ object Main{
   
   def main(args:Array[String]){
     //テストデータつくる
-    val data:List[(Double,Double,Double)] = this.makeTestData(100)
+    val data:List[(Double,Double,Double)] = this.makeTestData(30)
     //作り終えたらperceptronの学習しにいく
-    //重みをもってきてもらう
     val perceptron = new Perceptron
-    val w:List[Double] = perceptron.train(data)
+    //重みの初期値（適当に決めた)
+    var w:List[Double]=List[Double](0.2, -0.1, 0.3)
+    println(w)
+    
+    //学習データの数だけ施行する
+    for(i <- 0 to data.size){
+      //毎回学習の前にplotする
+      
+      //perceptron
+      var x_1 = data(i)._1
+      var x_2 = data(i)._2
+      var label = data(i)._3
+      w = perceptron.train(x_1,x_2,label,w)
+      println(w)
+      
+    }
     
     //tsvファイルに書き出し
     
     val up = new PrintWriter("output/upper.tsv")
     val lo = new PrintWriter("output/lower.tsv")
 
-    println(w)
     
     data.foreach({p =>
       //scoreは識別関数の値
@@ -43,13 +56,13 @@ object Main{
       val x = (r.nextDouble()) 
       val y = (r.nextDouble()) 
       //tはどちらのクラスに属するかの判定
-      //y＝5x+1より上にあればクラス1(1.0)，下にあればクラス2(-1.0)
+      //y＝2.0xより上にあればクラス1(1.0)，下にあればクラス2(-1.0)
       val t = if (this.h(x,y) >= 0.0) 1.0 else -1.0
       (x,y,t)
     })
   }
   
-  //y = 0.2xをクラスの境界とする．
+  //y = 2.0xをクラスの境界とする．
   private def h(x:Double, y:Double): Double = {
     2.0*x - y
   }
