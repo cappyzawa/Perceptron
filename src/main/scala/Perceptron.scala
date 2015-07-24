@@ -16,6 +16,7 @@ package perceptron{
       }
     }
     
+    //ここちゃんと考えればなんかみえてきそう！
     private def trial(data:List[(Double,Double,Double)], w:List[Double]): List[Double] = {
       var new_w:List[Double] = w
       
