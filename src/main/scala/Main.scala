@@ -1,69 +1,47 @@
 import scala.util.Random
 import java.io.PrintWriter
-import perceptron.Perceptron
+import perceptron.perceptron
+import breeze.linalg._
 
 object Main{
   
   def main(args:Array[String]){
-    //テストデータつくる
-    val data:List[(Double,Double,Double)] = this.makeTestData(30)
-    //作り終えたらperceptronの学習しにいく
-    val perceptron = new Perceptron
-    //重みの初期値（適当に決めた)
-    var w:List[Double]=List[Double](0.2, -0.1, 0.3)
-    println(w)
+    //学習データつくる
+    //クラスずつにつくる
+    val class1_data = DenseMatrix.rand(15,2)
+    val class2_data = DenseMatrix.rand(15,2) * -1.0d
     
-    //学習データの数だけ施行する
-    for(i <- 0 to data.size){
-      //毎回学習の前にplotする
-      
-      //perceptron
-      var x_1 = data(i)._1
-      var x_2 = data(i)._2
-      var label = data(i)._3
-      w = perceptron.train(x_1,x_2,label,w)
-      println(w)
-      
+    //それぞれのクラスのラベルを用意
+    val label1 = DenseMatrix.ones[Double](15,1)
+    val label2 = DenseMatrix.ones[Double](15,1) * -1.0d
+    
+    //ラベル付与
+    val class1 = DenseMatrix.horzcat(class1_data,label1)
+    val class2 = DenseMatrix.horzcat(class2_data,label2)
+    
+   
+    //学習データとして1つにまとめる．
+    val train_data = DenseMatrix.vertcat(class1,class2)
+    
+    //-------学習データの生成完了-----------//
+
+    //重みの初期値（適当に決めた)
+    var w = DenseVector(-0.2, -0.5, -0.4)
+    println("初期値"+ w)
+    
+    //パーセプトロン
+    val perceptron = new perceptron
+    for (i <- 0 to 10){
+      println(i + "週目")
+      for (j <-  0 to 29){
+        var x:DenseVector[Double] = DenseVector(train_data(j,0),train_data(j,1),train_data(j,2))
+        var new_w = perceptron.train(w, x)
+        w := new_w
+        println(w)
+      }
     }
     
-    //tsvファイルに書き出し
-    
-    val up = new PrintWriter("output/upper.tsv")
-    val lo = new PrintWriter("output/lower.tsv")
-
-    
-    data.foreach({p =>
-      //scoreは識別関数の値
-      //p._1はdataの1個目の値(val x)
-        val score = w(0) * p._1 + w(1) + p._2 + w(2)
-        if (score >= 0.0){
-          up.println("%f\t%f".format(p._1, p._2))
-        }else{
-          lo.println("%f\t%f".format(p._1, p._2))
-        }
-    })
-    up.close
-    lo.close
     
   }
-  
-  private def makeTestData(n:Int): List[(Double, Double, Double)] = {
-    
-    //２次元のテストデータの作成
-    //xとyをそれぞれランダムでつくり組み合わせる．
-    val r = new Random
-    (1 to n).toList.map({(n) =>
-      val x = (r.nextDouble()) 
-      val y = (r.nextDouble()) 
-      //tはどちらのクラスに属するかの判定
-      //y＝2.0xより上にあればクラス1(1.0)，下にあればクラス2(-1.0)
-      val t = if (this.h(x,y) >= 0.0) 1.0 else -1.0
-      (x,y,t)
-    })
-  }
-  
-  //y = 2.0xをクラスの境界とする．
-  private def h(x:Double, y:Double): Double = {
-    2.0*x - y
-  }
+ 
 }

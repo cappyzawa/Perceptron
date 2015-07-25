@@ -1,0 +1,6 @@
+lo <- read.table("../output/lower.tsv", sep="\t")
+up <- read.table("../output/upper.tsv", sep="\t")
+r = c(0, 1)
+plot(up, col=2, xlim=r, ylim=r)
+par(new=T)
+plot(lo, col=4, xlim=r, ylim=r)
