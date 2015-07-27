@@ -46,18 +46,19 @@ object Main{
     var w = DenseVector(-0.2, -0.5, -0.4)
     println("重みの初期値  "+ w)
     
+    var flag = 1
     
     //パーセプトロン
     val perceptron = new perceptron
-    for (i <- 1 to 4){
+    for(i <- 1 to 10 if flag != 0){
       println("-----"+ i + "周目 -----")
+      flag = 0
       for (j <-  0 to train_data.rows -1 ){
-        
         var x:DenseVector[Double] = DenseVector(train_data(j,0),train_data(j,1),train_data(j,2))
         var new_w = perceptron.train(w, x, p,f)
+        if(w != new_w)  flag = 1
         w := new_w
         println("学習後    "+ w)
-        
       }
     }
     f.saveas("resurt.png")

@@ -32,7 +32,6 @@ package perceptron{
         }
         else{
           println("OK")
-          p += plot(x_2(::,0),x_2(::,1),'-')
           return w
         }
       }
@@ -64,7 +63,6 @@ package perceptron{
       val x_2_plus = (w(1)-w(0))/w(2)
       val x_2_plus_mat = DenseMatrix(1.0,x_2_plus)
       val x_2 = DenseMatrix.vertcat(x_2_minus_mat.t,x_2_plus_mat.t)
-      println(x_2)
       return x_2
     }
   }
