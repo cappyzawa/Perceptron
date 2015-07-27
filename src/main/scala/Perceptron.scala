@@ -9,8 +9,9 @@ package perceptron{
       val g = this.makeFunction(w,x)
       println(g)
 
-      val x_2 = this.makeLine(w,x)
-      
+      //決定境界をつくる
+      val line = this.makeLine(w,x)
+      p += plot(line(::,0),line(::,1),'-')
       
       
       if(x(2) == 1.0){ //クラス1に属してるならgは0より大きいはず
@@ -44,7 +45,7 @@ package perceptron{
     private def updateWights(w:DenseVector[Double], x:DenseVector[Double]):DenseVector[Double] = {
 
       //正の定数rhoを決める
-      val rho = 0.02
+      val rho = 0.2
       //ベクトルxの作成 x_0は常に1
       val xvec = DenseVector(1.0,x(0),x(1))
       //可読性を高めるため一応labelについて記述
@@ -56,12 +57,12 @@ package perceptron{
     
     private def makeLine(w:DenseVector[Double], x:DenseVector[Double]):DenseMatrix[Double] ={
       //どうやら点と点を結ぶらしい
-      //x_1 = -1のときと,x_1 = 1のときを結べばいい
+      //x_2 = -1のときと,x_2 = 1のときを結べばいい
       //ここではx_1 = x(0)であるから
-      val x_2_minus = (w(1)*(-1.0d)-w(0))/w(2)
-      val x_2_minus_mat = DenseMatrix(-1.0,x_2_minus)
-      val x_2_plus = (w(1)-w(0))/w(2)
-      val x_2_plus_mat = DenseMatrix(1.0,x_2_plus)
+      val x_2_minus = (w(1)*w(1)-w(0))/(-1.0)
+      val x_2_minus_mat = DenseMatrix(x_2_minus,-1.0)
+      val x_2_plus = (w(1)*w(1)-w(0))
+      val x_2_plus_mat = DenseMatrix(x_2_plus, 1.0)
       val x_2 = DenseMatrix.vertcat(x_2_minus_mat.t,x_2_plus_mat.t)
       return x_2
     }
