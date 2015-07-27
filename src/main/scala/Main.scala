@@ -59,9 +59,10 @@ object Main{
         if(w != new_w)  flag = 1
         w := new_w
         println("学習後    "+ w)
+        f.saveas(i+"周目"+j+1+"番目.png")
       }
     }
-    f.saveas("resurt.png")
+    
     
     
   }
