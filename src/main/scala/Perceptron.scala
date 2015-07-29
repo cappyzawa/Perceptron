@@ -6,33 +6,30 @@ package perceptron{
   class perceptron{
     
     def train(w:DenseVector[Double], x:DenseVector[Double], p:Plot, f:Figure):DenseVector[Double] = {
+      //まず識別関数にw,xを代入して値を計算
       val g = this.makeFunction(w,x)
-      println(g)
 
-      //決定境界をつくる
+      //決定境界をつくる(描写するために作ったメソッド,少し冗長になってしまったかもしれない．)
       val line = this.makeLine(w,x)
+      //行列で表現した2点を'-'で結ぶ これが決定境界になる．
       p += plot(line(::,0),line(::,1),'-')
       
       
       if(x(2) == 1.0){ //クラス1に属してるならgは0より大きいはず
         if(g <= 0.0){
-          println("学習する")
           val new_w = this.updateWights(w,x)
           return new_w
         }
         else{
-          println("OK")
           return w
         }
       }
       else{
         if(g >= 0.0){
-          println("学習する")
           val new_w = this.updateWights(w,x)
           return new_w
         }
         else{
-          println("OK")
           return w
         }
       }
@@ -42,6 +39,7 @@ package perceptron{
       return w(0) + w(1)*x(1) + w(2)*x(2)
   }
     
+    //誤識別時の重みの更新
     private def updateWights(w:DenseVector[Double], x:DenseVector[Double]):DenseVector[Double] = {
 
       //正の定数rhoを決める
@@ -51,6 +49,7 @@ package perceptron{
       //可読性を高めるため一応labelについて記述
       val label = x(2)
       
+      //class1ならlabelは1，class2ならlabelは-1であるからこの式は成り立つ
       val new_w = w + rho * label * xvec
       return new_w
     }
@@ -58,7 +57,6 @@ package perceptron{
     private def makeLine(w:DenseVector[Double], x:DenseVector[Double]):DenseMatrix[Double] ={
       //どうやら点と点を結ぶらしい
       //x_2 = -1のときと,x_2 = 1のときを結べばいい
-      //ここではx_1 = x(0)であるから
       val x_2_minus = (w(1)*w(1)-w(0))/(-1.0)
       val x_2_minus_mat = DenseMatrix(x_2_minus,-1.0)
       val x_2_plus = (w(1)*w(1)-w(0))
