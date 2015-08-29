@@ -34,4 +34,5 @@ sbt compile run
 
 ## Edit
 ```src/main/scala/Perceptorn.scala``` の ```rho``` は学習率
+
 任意の値に編集して実行可能
