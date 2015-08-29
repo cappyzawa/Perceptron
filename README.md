@@ -33,3 +33,5 @@ sbt compile run
 学習が終わると更新がおわり，図が残ったままになってしまうため，コンソール上で ```control c``` で中断する．(要改善)
 
 ## Edit
+```src/main/scala/Perceptorn.scala``` の ```rho``` は学習率
+任意の値に編集して実行可能
