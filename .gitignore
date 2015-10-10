@@ -3,6 +3,11 @@
 #Picture
 *.png
 
+#sbt
+target/
+project/project
+project/target
+
 #IntelliJ
 .idea
 .idea_modules
