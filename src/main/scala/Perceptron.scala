@@ -1,24 +1,34 @@
-
-
 import breeze.linalg._
-import breeze.plot._
+import com.quantifind.charts.Highcharts._
 
 object Perceptron {
 
-  def train(w: DenseVector[Double], x: DenseVector[Double], p: Plot, f: Figure): DenseVector[Double] = {
+  def train(w: DenseVector[Double], x: DenseVector[Double]): DenseVector[Double] = {
     //まず識別関数にw,xを代入して値を計算
-    val g = this.makeFunction(w, x)
+    val g = w(0) + w(1) * x(1) + w(2) * x(2)
 
     //決定境界をつくる(描写するために作ったメソッド,少し冗長になってしまったかもしれない．)
-    val line = this.makeLine(w, x)
+    val l = makeLine(w, x)
     //行列で表現した2点を'-'で結ぶ これが決定境界になる．
-    p += plot(line(::, 0), line(::, 1), '-')
+    var xline: List[Double] = List()
+    var yline: List[Double] = List()
+    l(::, 0).foreach { e =>
+      xline :+= e
+    }
+    l(::, 1).foreach { e =>
+      yline :+= e
+    }
+
+    line(xline, yline)
+    hold()
+    //
+    //    line(l(::, 0), l(::, 1))
 
 
     if (x(2) == 1.0) {
       //クラス1に属してるならgは0より大きいはず
       if (g <= 0.0) {
-        val new_w = this.updateWights(w, x)
+        val new_w = updateWights(w, x)
         return new_w
       }
       else {
@@ -27,17 +37,13 @@ object Perceptron {
     }
     else {
       if (g >= 0.0) {
-        val new_w = this.updateWights(w, x)
+        val new_w = updateWights(w, x)
         return new_w
       }
       else {
         return w
       }
     }
-  }
-
-  private def makeFunction(w: DenseVector[Double], x: DenseVector[Double]): Double = {
-    return w(0) + w(1) * x(1) + w(2) * x(2)
   }
 
   //誤識別時の重みの更新
@@ -65,5 +71,6 @@ object Perceptron {
     val x_2 = DenseMatrix.vertcat(x_2_minus_mat.t, x_2_plus_mat.t)
     return x_2
   }
+
 }
   

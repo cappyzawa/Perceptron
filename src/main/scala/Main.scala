@@ -1,5 +1,5 @@
 import breeze.linalg._
-import breeze.plot._
+import com.quantifind.charts.Highcharts._
 
 object Main {
 
@@ -11,18 +11,36 @@ object Main {
     //第3象限にランダムに15個つくる(class2)
     val thirdQuadrant = DenseMatrix.rand(15, 2) * -1.0d
 
-    val f = Figure()
-    var p = f.subplot(0)
 
-    //まず学習データを先にplotする
-    p += plot(firstQuadrant(::, 0), firstQuadrant(::, 1), '.')
-    p += plot(thirdQuadrant(::, 0), thirdQuadrant(::, 1), '.')
-    //x_次元数
-    p.xlabel = "x_1"
-    p.ylabel = "x_2"
-    p.title = "Perceptron"
+    var xFirst: List[Double] = List()
+    var yFirst: List[Double] = List()
+    var xThird: List[Double] = List()
+    var yThird: List[Double] = List()
 
+    firstQuadrant(::, 0).foreach { e =>
+      xFirst :+= e
+    }
 
+    firstQuadrant(::, 1).foreach { e =>
+      yFirst :+= e
+    }
+
+    thirdQuadrant(::, 0).foreach { e =>
+      xThird :+= e
+    }
+
+    thirdQuadrant(::, 1).foreach { e =>
+      yThird :+= e
+    }
+
+    scatter(xFirst, yFirst)
+    hold()
+    scatter(xThird, yThird)
+    title("Perceptron")
+    xAxis("x_1")
+    yAxis("x_2")
+    legend(List("Class1", "Class2"))
+    hold()
 
     //それぞれのクラスのラベルを用意
     //15行1列で全部1の行列作成（class1のラベル)
@@ -56,12 +74,11 @@ object Main {
           //学習データのj行をベクトル化する．
           val x: DenseVector[Double] = DenseVector(trainData(j, 0), trainData(j, 1), trainData(j, 2))
           //学習しに行く
-          var new_w = Perceptron.train(w, x, p, f)
+          var new_w = Perceptron.train(w, x)
           if (w != new_w) {
             flag = 1 //1度でも誤識別があればflagは1になる．
           }
           w := new_w
-          f.saveas(i + "周目" + (j + 1) + "回目.png")
         }
       } else {
         println("終了")

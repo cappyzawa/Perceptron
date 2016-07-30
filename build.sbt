@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.6"
 
-libraryDependencies  ++= Seq(
+libraryDependencies ++= Seq(
   // other dependencies here
   "org.scalanlp" %% "breeze" % "0.11.2",
   // native libraries are not included by default. add this if you want them (as of 0.7)
@@ -14,7 +14,8 @@ libraryDependencies  ++= Seq(
   "org.scalanlp" %% "breeze-natives" % "0.11.2",
   // the visualization library is distributed separately as well. 
   // It depends on LGPL code.
-    "org.scalanlp" %% "breeze-viz" % "0.11.2"
+  "org.scalanlp" %% "breeze-viz" % "0.11.2",
+  "com.quantifind" %% "wisp" % "0.0.4"
 )
 
 resolvers ++= Seq(
